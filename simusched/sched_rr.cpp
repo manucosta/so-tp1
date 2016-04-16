@@ -12,7 +12,7 @@ SchedRR::SchedRR(vector<int> argn) {
 	for(int i = 0; i < cant_cores; i++) {
 		quantum_original_cpu.pushback(argn[i+1]); //lleno el array de cpu_quantum con los quantums de cada core.
 		quantum_restante_cpu.pushback(argn[i+1]); //le pongo todo el quantum a cada cpu.
-		pid_actual_cpu.pushback(-1); //le pongo -1 a cada cpu, porque inicialmente ninguna cpu ejecuta ningun proceso.
+		pid_actual_cpu.pushback(IDLE_TASK); //le pongo IDLE_TASK a cada cpu, porque inicialmente ninguna cpu ejecuta ningun proceso.
 	}
 	//poner algo sobre cola_procesos? inicializarla con algo? no se.
 //<<<REMOVE>>>
@@ -30,7 +30,7 @@ void SchedRR::load(int pid) {
 	//si hay un cpu vacio, meterle a esa cpu este proceso. si no hay cpu vacio, encolar.
 	bool lo_asigne = false;
 	for(int i = 0; i < cant_cores; i++) {
-		if(pid_actual_cpu[i] == -1) {
+		if(pid_actual_cpu[i] == IDLE_TASK) {
 			pid_actual_cpu[i] = pid;
 			lo_asigne = true;
 		}
@@ -59,17 +59,37 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 			} else { //no uso todo su quantum, restarle 1 al quantum
 				quantum_restante_cpu[cpu]--;
 			}
-			int j = cpu;
+			/*int j = cpu;
 			for(int i = 0; i < cant_cores; i++) {
 				j = (j+1)%cant_cores;
-				if(pid_actual_cpu[j] != -1) {
+				if(pid_actual_cpu[j] != IDLE_TASK) {
 					return pid_actual_cpu[j]; //devuelvo el pid de la siguiente cpu que tenga un proceso ejecutandose.
 				}
-			}
+			}*/
+			return pid_actual_cpu[cpu]; //devuelvo el pid de esa cpu
 		case BLOCK:
-			break;
+			//si se bloqueo el proceso, sacarlo de la cpu y ni ponerlo en la cola de ready, hay q esperar que se desbloquee para eso.
+			//si se bloqueo ejecutar idle hasta que se termine el quantum? o ya directamente poner otro proceso?
+			//asumo que si una tarea se bloqueo, no me quedo haciendo idle hasta que termine el quantum, sino que busco otra tarea para ejecutar y recargo el quantum (preguntar si esta bien asumir y hacer eso)
+			quantum_restante_cpu[cpu] = quantum_original_cpu[cpu];
+			pid_actual_cpu[cpu] = IDLE_TASK;
+			if(!cola_procesos.empty()) { //si hay una tarea en la cola de procesos, asignarsela a esta cpu y quitarla de la cola
+				pid_actual_cpu[cpu] = cola_procesos.front();
+				cola_procesos.pop();
+			}
+			return pid_actual_cpu[cpu];
+			//ocurre que si un proces ose bloquea, cuando vuelve puede alterar el orden de ejecucion de las tareas.
+			//si venia, p1, p2, p3, p4, p1, p2, p3, p4, p1, y ahora p1 se bloquea, sigue:
+			//p2, p3, p4, p2, p3, y si ahora vuelve p1, sigue: p4, p2, p1, p3, p4, p2, p1, p3, etc... CREO QUE PASA ESO
+			//si pasa eso esta mal?... no se..
 		case EXIT:
-			break;
+			quantum_restante_cpu[cpu] = quantum_original_cpu[cpu]; //recargo el quantum
+			pid_actual_cpu[cpu] = IDLE_TASK;
+			if(!cola_procesos.empty()) { //si hay una tarea en la cola de procesos, asignarsela a esta cpu y quitarla de la cola
+				pid_actual_cpu[cpu] = cola_procesos.front();
+				cola_procesos.pop();
+			}
+			return pid_actual_cpu[cpu];
 	}
 }
 
