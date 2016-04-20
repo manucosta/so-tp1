@@ -1,4 +1,6 @@
 #include "tasks.h"
+#include <stdlib.h> /* srand, rand */
+#include <time.h>  
 
 using namespace std;
 
@@ -37,7 +39,7 @@ void TaskConsola(int pid, vector<int> params) { // params: n, bmin, bmax.
 	  
 	 Lote:
 		TaskConsola 5 4 10
-		2* TaskCPU 25
+		*2 TaskCPU 25
 	 
 	 Ej 2)
 	 Lote:
@@ -80,7 +82,7 @@ void TaskBatch(int pid, vector<int> params) { // params: total_cpu, cant_bloqueo
 		TaskBatch 15 1
 	 
 	 
-	/*
+	*/
 }
 
 
@@ -92,4 +94,6 @@ void tasks_init(void) {
 	register_task(TaskCPU, 1);
 	register_task(TaskIO, 2);
 	register_task(TaskAlterno, -1);
+	register_task(TaskConsola, 3);
+	register_task(TaskBatch, 2);
 }

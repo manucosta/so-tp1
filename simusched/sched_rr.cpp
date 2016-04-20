@@ -10,9 +10,9 @@ SchedRR::SchedRR(vector<int> argn) {
 	// Round robin recibe la cantidad de cores y sus cpu_quantum por parámetro
 	cant_cores = argn[0];
 	for(int i = 0; i < cant_cores; i++) {
-		quantum_original_cpu.pushback(argn[i+1]); //lleno el array de cpu_quantum con los quantums de cada core.
-		quantum_restante_cpu.pushback(argn[i+1]); //le pongo todo el quantum a cada cpu.
-		pid_actual_cpu.pushback(IDLE_TASK); //le pongo IDLE_TASK a cada cpu, porque inicialmente ninguna cpu ejecuta ningun proceso.
+		quantum_original_cpu.push_back(argn[i+1]); //lleno el array de cpu_quantum con los quantums de cada core.
+		quantum_restante_cpu.push_back(argn[i+1]); //le pongo todo el quantum a cada cpu.
+		pid_actual_cpu.push_back(IDLE_TASK); //le pongo IDLE_TASK a cada cpu, porque inicialmente ninguna cpu ejecuta ningun proceso.
 	}
 	//poner algo sobre cola_procesos? inicializarla con algo? no se.
 //<<<REMOVE>>>
@@ -55,7 +55,8 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 			if(quantum_restante_cpu[cpu] == 1) { //uso todo su quantum, sacarlo y poner otro de la cola.
 				quantum_restante_cpu[cpu] = quantum_original_cpu[cpu]; //recargo el quantum
 				cola_procesos.push(pid_actual_cpu[cpu]); //encolo al proceso
-				pid_actual_cpu[cpu] = cola_procesos.pop(); //agarro al proximo de la cola y lo pongo a ejecutar en este cpu (le puede volver a tocar al anterior si no hay nadie mas en la cola.
+				pid_actual_cpu[cpu] = cola_procesos.front(); //agarro al proximo de la cola y lo pongo a ejecutar en este cpu (le puede volver a tocar al anterior si no hay nadie mas en la cola.
+				cola_procesos.pop();
 			} else { //no uso todo su quantum, restarle 1 al quantum
 				quantum_restante_cpu[cpu]--;
 			}
@@ -91,6 +92,7 @@ int SchedRR::tick(int cpu, const enum Motivo m) {
 			}
 			return pid_actual_cpu[cpu];
 	}
+	return 0;
 }
 
 //<<<REMOVE>>>
