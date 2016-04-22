@@ -2,13 +2,13 @@ export LC_ALL=C
 CXXFLAGS= -Wall -pedantic -g -ggdb
 LDFLAGS= -lpthread
 
-OBJS=main.o simu.o basesched.o basetask.o tasks.o sched_rr.o sched_fcfs.o sched_rr2.o sched_mistery.o sched_no_mistery.o
+OBJS=main.o simu.o basesched.o basetask.o tasks.o sched_rr.o sched_fcfs.o sched_rr2.o sched_no_mistery.o
 MAIN=simusched
 
 .PHONY: all clean new
 all: $(MAIN)
 
-$(MAIN): $(OBJS)
+$(MAIN): $(OBJS) sched_mistery.o 
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cpp %.h basesched.h
