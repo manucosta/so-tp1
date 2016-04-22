@@ -22,7 +22,7 @@ void TaskAlterno(int pid, vector<int> params) { // params: ms_pid, ms_io, ms_pid
 
 void TaskConsola(int pid, vector<int> params) { // params: n, bmin, bmax.
 	int nro_random;
-	srand(53); //seed = 53.. dsp usar de seed el time del sistema, o no se...
+	//srand(0);
 	for(int i = 0; i < params[0]; i++) { // params[0] = n. Se ejecuta el for n veces. Por lo tanto calcula n números random y realiza n llamadas bloqueantes, cada una con un nuevo número random.
 		nro_random = rand()%(params[2]-params[1]+1) + params[1]; //Obtengo un numero random entre params[1] = bmin y params[2] = bmax inclusive ambos.
 		uso_IO(pid, nro_random); //Realizo una llamada bloqueante con duración nro_random.
@@ -56,7 +56,7 @@ void TaskConsola(int pid, vector<int> params) { // params: n, bmin, bmax.
 }
 
 void TaskBatch(int pid, vector<int> params) { // params: total_cpu, cant_bloqueos
-	srand(20); //uso seed = 20;
+	srand(time(NULL));
 	int tiempo_disponible = params[0] - params[1]; //params[0] = total_cpu. params[1] = cant_bloqueos. tiempo_disponible indica cuanto tiempo se va a tener que usar la CPU. Sería el total_cpu menos el tiempo que tarda lanzar cada llamada bloqueante * cant_bloqueos. El tiempo que tarda lanzar cada llamada bloqueante es 1, asi que queda 1*cant_bloqueos = cant_bloqueos.
 	if(tiempo_disponible < 0) { // Si tiempo disponible < 0, significa que no me da el tiempo para ejecutar todas las llamadas bloqueantes que debo, asi que simplemente uso todo el CPU (lo decidi YO - eze).
 		uso_CPU(pid, params[0]);

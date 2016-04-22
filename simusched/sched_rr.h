@@ -12,6 +12,9 @@ class SchedRR : public SchedBase {
 		virtual void load(int pid);
 		virtual void unblock(int pid);
 		virtual int tick(int cpu, const enum Motivo m);
+		
+		//borrar dsp
+		virtual void mostrarEstructura();
 
 	private:
 //<<<REMOVE>>>
@@ -20,6 +23,7 @@ class SchedRR : public SchedBase {
 		std::vector<int> def_quantum;
 		int next(int cpu);
 //<<<REMOVE END>>>
+		//int cantTareasTerminadas;
 		int cant_cores;
 		std::queue<int> cola_procesos; //la cola donde se van poniendo los procesos que no se estan ejecutando. se guarda el pid de cada proceso.
 		std::vector<int> quantum_original_cpu; //te dice cuantos ciclos originalmente tiene cada cpu
