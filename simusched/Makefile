@@ -21,13 +21,24 @@ simusched.o: simusched.cpp basetask.h basesched.h tasks.h
 tasks.o: tasks.cpp tasks.h basetask.h
 
 ejercicio1:
-	./simusched lotes/loteEj1-1.tsk 1 1 0 SchedFCFS | ./graphsched.py >> imgEj1-1
+	./simusched lotes/loteEj1.tsk 1 5 0 SchedFCFS | ./graphsched.py >> imgEj1-1.png
+
 ejercicio2:
-	./simusched lotes/loteEj2-1.tsk 1 5 2 SchedFCFS | ./graphsched.py >> imgEj2-1
-	./simusched lotes/loteEj2-1.tsk 2 5 2 SchedFCFS | ./graphsched.py >> imgEj2-2
-	./simusched lotes/loteEj2-1.tsk 4 5 2 SchedFCFS | ./graphsched.py >> imgEj2-3
+	./simusched lotes/loteEj2.tsk 1 5 2 SchedFCFS | ./graphsched.py >> imgEj2-1.png
+	./simusched lotes/loteEj2.tsk 2 5 2 SchedFCFS | ./graphsched.py >> imgEj2-2.png
+	./simusched lotes/loteEj2.tsk 4 5 2 SchedFCFS | ./graphsched.py >> imgEj2-3.png
+
+ejercicio3:
+	./simusched lotes/loteEj3.tsk 1 5 0 SchedFCFS | ./graphsched.py >> imgEj3.png
+
+ejercicio5:
+	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 2 | ./graphsched.py >> imgEj5-1.png
+	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 10 | ./graphsched.py >> imgEj5-2.png
+	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 30 | ./graphsched.py >> imgEj5-3.png
+
+ejercicios: new ejercicio1 ejercicio2 ejercicio3
 
 clean:
-	rm -f $(OBJS) $(MAIN)
+	rm -f $(OBJS) $(MAIN) *.png
 
 new: clean all
