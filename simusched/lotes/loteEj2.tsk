@@ -1,4 +1,7 @@
 TaskCPU 500
-TaskConsola 10 1 4
-TaskConsola 20 1 4
-TaskConsola 30 1 4
+@10:
+TaskConsola 1 1 4
+@20:
+TaskConsola 1 1 4
+@30
+TaskConsola 1 1 4
