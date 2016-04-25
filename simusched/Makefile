@@ -21,7 +21,7 @@ simusched.o: simusched.cpp basetask.h basesched.h tasks.h
 tasks.o: tasks.cpp tasks.h basetask.h
 
 ejercicio1:
-	./simusched lotes/loteEj1.tsk 1 5 0 SchedFCFS | ./graphsched.py >> img/imgEj1-1.png
+	./simusched lotes/loteEj1.tsk 2 2 0 SchedFCFS | ./graphsched.py >> img/imgEj1-1.png
 
 ejercicio2:
 	./simusched lotes/loteEj2.tsk 1 5 2 SchedFCFS | ./graphsched.py >> img/imgEj2-1.png
