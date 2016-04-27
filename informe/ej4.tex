@@ -1,0 +1,21 @@
+A continuación detallamos los atributos privados de la clase \texttt{SchedRR}:
+\begin{itemize}
+	\item \texttt{cant\_cores}: almacena la cantidad de procesadores que tiene el sistema.
+	\item \texttt{cola\_procesos}: la cola \emph{FIFO} en la cual se almacenan todos los procesos que están cargados, listos para ejecutar (o sea, en estado \emph{ready}). Dicha cola es global para todos los procesadores.
+	\item \texttt{quantum\_original\_cpu}: es un vector de longitud \texttt{cant\_cores}, tal que \texttt{quantum\_original\_cpu[i]} indica la duración de un \emph{quantum} del procesador \texttt{i}.
+	\item \texttt{quantum\_restante\_cpu}: otro vector de longitud \texttt{cant\_cores}, tal que \texttt{quantum\_restante\_cpu[i]} indica cuántos ciclos le quedan al proceso corriendo en el procesador \texttt{i} antes de agotar su \emph{quantum}. En el caso en que se esté corriendo la tarea \emph{idle} este valor no representa nada (pues tal tarea debe correr indefinidamente hasta que aparezca una nueva tarea para ser ejecutada).
+\end{itemize}
+
+Además, la clase cuenta con una función auxiliar, \texttt{int next(int cpu)}, que se encarga de devolver el \emph{pid} del siguiente proceso a ejecutar, removiéndolo de la cola de procesos y reiniciando el \emph{quantum} disponible para el proceso que llega. Notar que en caso de que no hayan procesos en \emph{ready} los últimos dos pasos no se ejecutan y simplemente se devuelve el \emph{pid} de la tarea \emph{idle}.
+
+La clase posee los siguientes métodos públicos:
+\begin{itemize}
+	\item \texttt{void load(int pid)}: se encarga de cargar el proceso identificado por \texttt{pid}. Notar que esto simplemente consiste en agregarlo a la cola. Luego, eventualmente se ejecutará en un tick de reloj.
+	\item \texttt{void unblock(int pid)}: vuelve a cargar una tarea que dejó de estar bloqueada, lo que consiste simplemente en llamar a la función \texttt{load}.
+	\item \texttt{int tick(int cpu, const enum Motivo m)}: esta función se divide en tres casos según el motivo con el que se la haya llamado. Tanto en el caso en que la tarea que corría en \texttt{cpu} se haya bloqueado como en el que terminó hacemos lo mismo: sencillamente ponemos a correr a la siguiente tarea disponible (o a \emph{idle} en caso de no haber ninguna), dejando a la tarea actual fuera del ciclo de ejecución (temporalmente en un caso, permanentemente en el otro). Si no sucedieron ninguna de las dos cosas entonces tenemos nuevamente tres posibles escenarios:
+	\begin{enumerate}
+		\item La tarea actual es \emph{idle}, en cuyo caso solo queda llamar a \texttt{next} y devolver su resultado.
+		\item La tarea actual no es \emph{idle} pero agotó su \emph{quantum}, por lo que la volvemos a encolar (pues aún no ha terminado) y llamamos a \texttt{next}. Si no había otra tarea se seguirá ejecutando la misma durante otro \emph{quantum}.
+		\item La tarea actual ni es \emph{idle} ni terminó su \emph{quantum}, así que debe seguir ejecutando pero reducimos en 1 la cantidad de ciclos restantes.
+	\end{enumerate}
+\end{itemize}

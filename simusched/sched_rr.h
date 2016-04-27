@@ -17,11 +17,11 @@ class SchedRR : public SchedBase {
 		virtual void mostrarEstructura();
 
 	private:
-		int next(int cpu);
 		int cant_cores;
 		std::queue<int> cola_procesos; //la cola donde se van poniendo los procesos que no se estan ejecutando. se guarda el pid de cada proceso.
 		std::vector<int> quantum_original_cpu; //te dice cuantos ciclos originalmente tiene cada cpu
 		std::vector<int> quantum_restante_cpu; //te dice cuantos ciclos le quedan al proceso por cada cpu
+		int next(int cpu);
 };
 
 #endif
