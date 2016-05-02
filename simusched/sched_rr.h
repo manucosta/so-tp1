@@ -12,9 +12,6 @@ class SchedRR : public SchedBase {
 		virtual void load(int pid);
 		virtual void unblock(int pid);
 		virtual int tick(int cpu, const enum Motivo m);
-		
-		//borrar dsp
-		virtual void mostrarEstructura();
 
 	private:
 		int cant_cores;

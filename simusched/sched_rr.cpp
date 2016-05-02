@@ -6,15 +6,6 @@
 
 using namespace std;
 
-//es para testear, dsp borrar!
-void SchedRR::mostrarEstructura() {
-  /*for(int i = 0; i < cant_cores; i++) {
-    cout << "quantum original cpu " << i << ": " << quantum_original_cpu[i] << endl;
-    cout << "quantum restante cpu " << i << ": " << quantum_restante_cpu[i] << endl;
-    cout << "pid_actual cpu " << i << ": " << pid_actual_cpu[i] << endl;
-  }*/
-}
-
 SchedRR::SchedRR(vector<int> argn) {
   // Round robin recibe la cantidad de cores y sus cpu_quantum por parámetro
   // Cuando se llama para graficar, no tenes que volver a poner los nucleos 
@@ -40,9 +31,11 @@ void SchedRR::unblock(int pid) {
 int SchedRR::tick(int cpu, const enum Motivo m) {
   switch(m) {
     case TICK:
-      if(current_pid(cpu) == IDLE_TASK){  //separamos esto porque no queremos encolar idle
+      if(current_pid(cpu) == IDLE_TASK) {
+        //separamos esto porque no queremos encolar idle, ni tiene una duración determinada        
         return next(cpu);
-      }else if(quantum_restante_cpu[cpu] == 1) { //uso todo su quantum, sacarlo y poner otro de la cola.
+      }else if(quantum_restante_cpu[cpu] == 1) { 
+        //uso todo su quantum, sacarlo y poner otro de la cola.
         cola_procesos.push(current_pid(cpu)); //encolo al proceso pues todavía no terminó
         return next(cpu);
       } else { //no uso todo su quantum, restarle 1 al quantum

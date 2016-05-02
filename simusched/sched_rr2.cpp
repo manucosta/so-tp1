@@ -15,39 +15,27 @@ SchedRR2::SchedRR2(vector<int> argn) {
 		cant_procesos_cpu.push_back(0);
 		cola_procesos_cpu.push_back(std::queue<int>());
 	}
-//<<<REMOVE>>>
-//<<<REMOVE END>>>
 }
 
-SchedRR2::~SchedRR2() {
-
-}
+SchedRR2::~SchedRR2() {}
 
 
 void SchedRR2::load(int pid) {
-	//cout << "entro al load" << endl;
 	if(procesos_por_nucleo.count(pid)) { //si existe en el diccionario, es porque ya tenia asignado una cpu
 		int cpu_perteneciente = procesos_por_nucleo.find(pid)->second; //me guardo a que cpu pertenece el proceso con id = pid
 		cola_procesos_cpu[cpu_perteneciente].push(pid); //agrego el proceso a la cola de la cpu perteneciente
 	} else {
-		//cout << "entre al else" << endl;
 		int indice_cpu_menor = 0;
 		for(int i = 0; i < cant_cores; i++) {
-			//cout << "entre al for" << endl;
 			if(cant_procesos_cpu[i] < cant_procesos_cpu[indice_cpu_menor]) {
 				indice_cpu_menor = i;
 				break;
 			}
-		}
-		//cout << "sali del for" << endl;
-		//hasta aca tengo el indice de la cpu que tiene menos procesos
+		}	//hasta aca tengo el indice de la cpu que tiene menos procesos
 		cant_procesos_cpu[indice_cpu_menor]++; //ahora esa cpu tiene un proceso mas
-		//cout << "hizo el 1" << endl;
 		procesos_por_nucleo.insert( std::pair<int,int>(pid, indice_cpu_menor) ); //agrego la conexion pid-cpu
-		//cout << "hizo el 2" << endl;
 		cola_procesos_cpu[indice_cpu_menor].push(pid); //pusheo el proceso a la cola de su cpu.
 	}
-	//cout << "termine el load" << endl;
 }
 
 void SchedRR2::unblock(int pid) {
@@ -58,16 +46,21 @@ int SchedRR2::tick(int cpu, const enum Motivo m) {
 	switch(m) {
 		case TICK:
 			//si era el ultimo tick encolarlo y agarrar otro. sino restar quantum.
-			if(current_pid(cpu) == IDLE_TASK) {  //separamos esto porque no queremos encolar idle
+			if(current_pid(cpu) == IDLE_TASK) { 
+				//separamos esto porque no queremos encolar idle, ni tiene una duración determinada
 				return next(cpu);
-			} else if(quantum_restante_cpu[cpu] == 1) { //uso todo su quantum, sacarlo y poner otro de la cola.
+			} else if(quantum_restante_cpu[cpu] == 1) { 
+				//uso todo su quantum, sacarlo y poner otro de la cola.
 				cola_procesos_cpu[cpu].push(current_pid(cpu)); //encolo al proceso pues todavía no terminó
 				return next(cpu);
-			} else { //no uso todo su quantum, restarle 1 al quantum
+			} else { 
+				//no uso todo su quantum, restarle 1 al quantum
 				quantum_restante_cpu[cpu]--;
 				return current_pid(cpu);
 			}
 		case BLOCK:
+			//el proceso sigue en la CPU pero momentaneamente está fuera del ciclo
+			//de ejecución hasta que haga unblock
 			return next(cpu);
 		case EXIT:
 			cant_procesos_cpu[cpu]--; //ahora hay un proceso menos en la cpu
