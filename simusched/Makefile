@@ -25,29 +25,27 @@ ejercicio1:
 
 ejercicio2:
 	./simusched lotes/loteEj2.tsk 1 5 2 SchedFCFS | ./graphsched.py > img/imgEj2-1.png
-	./simusched lotes/loteEj2.tsk 1 5 2 SchedFCFS > data/data2-1.out
 	./simusched lotes/loteEj2.tsk 2 5 2 SchedFCFS | ./graphsched.py > img/imgEj2-2.png
-	./simusched lotes/loteEj2.tsk 2 5 2 SchedFCFS > data/data2-2.out
 	./simusched lotes/loteEj2.tsk 4 5 2 SchedFCFS | ./graphsched.py > img/imgEj2-3.png
-	./simusched lotes/loteEj2.tsk 4 5 2 SchedFCFS > data/data2-3.out
 
 ejercicio3:
 	./simusched lotes/loteEj3.tsk 1 5 0 SchedFCFS | ./graphsched.py > img/imgEj3.png
-	./simusched lotes/loteEj3.tsk 1 5 0 SchedFCFS > data/data3.out
 
 ejercicio5:
 	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 2 | ./graphsched.py > img/imgEj5-1.png
-	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 2 > data/data5-1.out
 	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 10 | ./graphsched.py > img/imgEj5-2.png
-	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 10 > data/data5-2.out
 	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 30 | ./graphsched.py > img/imgEj5-3.png
-	./simusched lotes/loteEj5.tsk 1 2 0 SchedRR 30 > data/data5-3.out
 
 ejercicio6:
 	./simusched lotes/loteEj5.tsk 1 2 0 SchedFCFS | ./graphsched.py > img/imgEj6-1.png
 	./simusched lotes/loteEj6.tsk 1 2 0 SchedFCFS | ./graphsched.py > img/imgEj6-2.png
 
-ejercicios: new ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6
+ejercicio7:
+	./simusched lotes/loteEj7-1.tsk 1 0 0 SchedMistery | ./graphsched.py > img/imgEj7-1.png
+	./simusched lotes/loteEj7-2.tsk 1 2 0 SchedMistery 5 10 | ./graphsched.py > img/imgEj7-2.png
+	./simusched lotes/loteEj7-3.tsk 1 2 0 SchedMistery 5 10 | ./graphsched.py > img/imgEj7-3.png
+
+ejercicios: new ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6 ejercicio7
 
 clean:
 	rm -f $(OBJS) $(MAIN)
