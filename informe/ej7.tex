@@ -1,5 +1,40 @@
-Después de varias pruebas descubrimos que el comportamiento de \texttt{SchedMistery} tiene el compartamiento de un \emph{multilevel feedback-queue}. Los parametros pasados son los quantums de las colas en orden de mayor a menos prioridad y tiene por defecto una cola de quantum 1 que es la de mayor prioridad.
-\newline Detallamos los atributos privados y las funciones publicas de la clase \texttt{SchedNoMistery} donde replicamos el comportamiento de \texttt{SchedMistery}
+\subsection{Introducción}
+En este ejercicio se nos proveyó el archivo objeto del \texttt{SchedMistery} con el fin de que estudiemos su funcionamiento y repliquemos el código del mismo para poder hacerle modificaciones en un futuro no muy lejano.
+
+\subsection{Análisis del \texttt{SchedMistery}}
+Luego de varias pruebas con varios lotes y distintos parámetros descubrimos que el comportamiento de \texttt{SchedMistery} se ajusta al compartamiento de un \emph{multilevel feedback-queue}. Como parámetros recibe los quantum de las colas con las que contará el scheduler en orden de mayor a menor prioridad, y por defecto cuenta con una cola de quantum 1 de máxima prioridad.
+
+A la hora de experimentar con lotes y parámetros, los diagramas \ref{fig:ej7-1} \ref{fig:ej7-2} \ref{fig:ej7-3} fueron los que más nos ayudaron a darnos cuenta cómo funcinaba el \texttt{SchedMistery}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{img/imgEj7-1}
+  \caption{}
+  \label{fig:ej7-1}
+\end{figure}
+
+En el diagrama anterior no le pasamos ningún parametro al \texttt{SchedMistery}. Pudimos notar que por defecto crea una cola con quantum 1. Es importante notar que cuando el proceso 0 ejecuta tres ciclos de reloj seguidos es debido a que los otros procesos estaban bloqueados.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{img/imgEj7-2}
+  \caption{}
+  \label{fig:ej7-2}
+\end{figure}
+
+En la figura \ref{fig:ej7-2} los quantums de las colas son 1, 5 y 10. Podemos observar que los tres procesos empiezan ejecutando quantum 1, después pasan a la segunda cola y ejecutan durante 5 ciclos pasando a la tercer cola, donde el proceso 0 gasta todo su quantum pero los procesos 1 y 2 se bloquean. Estos procesos pasan a la segunda cola, aumentando su prioridad, por eso el proceso 1 corre 5 ciclos, en cambio el proceso 2 se vuelve a bloquear y pasa a la primera cola. Como el proceso 1 entró último a la cola de menor prioridad y el proceso 2 esta bloqueado, ejecuta el proceso 0. En el tiempo 78 entra el proceso 3 y se ubica al final de la primera cola, por esto se ejecuta el 2 (que había subido dos grados su prioridad) y luego el 3. Con esto pudimos ver que al gastar todo su quantum pasa a la siguiente cola con menor prioridad y al bloquearse pasa a la siguiente cola con mayor prioridad.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{img/imgEj7-3}
+  \caption{}
+  \label{fig:ej7-3}
+\end{figure}
+
+El lote usado para este diagrama es muy similar al anterior, la única diferencia es que no se agrega el proceso 3 en el tiempo 78. Esto genera que el proceso 2 cuando empieza a ejecutarse en el tiempo 80 ejecuta su quantum de 1 y como después de esto sigue siendo el más prioritario vuelve a ejecutar con el quantum de la segunda cola de prioridad (5), por eso ejecuta un total de 6 ciclos. Este gráfico nos mostro que para buscar al próximo proceso para ejecutarse siempre empezaba buscando en la cola de mayor prioridad hasta encontrar una cola que no estuviera vacia. Por lo que no ejecuta los de menor prioridad hasta acabar con los de mayor prioridad.
+
+\subsection{Implementación del \texttt{SchedNoMistery}}
+\newline A continuación detallaremos los atributos privados y las funciones públicas de la clase \texttt{SchedNoMistery} donde replicamos el comportamiento del \texttt{SchedMistery}
 Atributos privados:
 \begin{itemize}
 	\item \texttt{vq}: Es un vector que tiene las colas de prioridad en orden, la de mayor prioridad en el 0 y la de menor al final.
@@ -10,7 +45,7 @@ Atributos privados:
 	\item \texttt{cur\_pri}: La prioridad de la proceso que se esta corriendo
 \end{itemize}
 
-La clase tiene una función privada, \texttt{int next()}, que se encarga de devolver el \emph{pid} del siguiente proceso a ejecutar, buscado, desde la cola de mayor prioridad hasta la de menor, la primera cola vacia donde remueve el primer procesos, reinicia el \emph{quantum} y actualiza \emph{cur\_pri}. En caso de que todas las colas esten vacias devuelve el \emph{pid} de la tarea \emph{idle}.
+La clase tiene una función privada, \texttt{int next()}, que se encarga de devolver el \emph{pid} del siguiente proceso a ejecutar, buscado, desde la cola de mayor prioridad hasta la de menor, la primera cola vacia donde remueve el primer procesos, reinicia el \emph{quantum} y actualiza \emph{cur\_pri}. En caso de que todas las colas esten vacias devuelve el \emph{pid} de la tarea \emph{idle}. \\
 
 Además posee los siguientes métodos públicos:
 \begin{itemize}
@@ -29,32 +64,3 @@ Además posee los siguientes métodos públicos:
 		\end{enumerate}
 	\end{enumerate}
 \end{itemize}
-
-Los diagramas \ref{fig:ej7-1} \ref{fig:ej7-2} \ref{fig:ej7-3} son los que más nos ayudaron para darnos cuenta como funcinaba \texttt{SchedMistery}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=1\textwidth]{img/imgEj7-1}
-  \caption{}
-  \label{fig:ej7-1}
-\end{figure}
-
-Para este diagrama no pasamos ningún parametro a \texttt{SchedMistery} lo que nos mostro que siempre tiene una cola de 1 de quantum. 
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=1\textwidth]{img/imgEj7-2}
-  \caption{}
-  \label{fig:ej7-2}
-\end{figure}
-
-En este diagrama los quantums de las colas son 1, 5 y 10. Podemos observar que los tres procesos empiezan ejecutando quantum 1, después pasan a la segunda cola y ejecutan por 5 ciclos pasando a la tercera cola donde el proceso 0 gasta todo su quantum pero los procesos 1 y 2 se bloquean. Estos procesos pasan a la segunda cola, aumentando su prioridad, por eso el proceso 1 corre 5 ciclos, en cambio el proceso 2  se vuelve a bloquear y pasa a la primera cola. Como el proceso 1 entro último a la cola de menor prioridad y el proceso 2 esta bloqueado ejecuta el proceso 0. En el tiempo 78 entra el proceso 3 y se ubica al final de la primera cola, por esto se ejecuta el 2 (que había subido dos grados su prioridad) y luego el 3. Con esto pudimos ver que al gastar todo su quantum pasa a la siguiente cola con menor prioridad y al bloquearse  pasa a la siguiente cola con mayor prioridad.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=1\textwidth]{img/imgEj7-3}
-  \caption{}
-  \label{fig:ej7-3}
-\end{figure}
-
-El lote usado para este diagrama es muy similar al anterior, la única diferencia es que no se agrega el proceso 3 en el tiempo 78. Esto genera que el proceso 2 cuando empieza a ejecutarse en el tiempo 80 ejecuta su quantum de 1 y como después de esto sigue siendo el más prioritario vuelve a ejecutar con el quantum de la segunda cola de prioridad (5), por eso ejecuta un total de 6 ciclos. Este gráfico nos mostro que para buscar al próximo proceso para ejecutarse siempre empezaba buscando en la cola de mayor prioridad hasta encontrar una cola que no estuviera vacia. Por lo que no ejecuta los de menor prioridad hasta acabar con los de mayor prioridad.
