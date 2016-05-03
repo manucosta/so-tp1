@@ -45,7 +45,13 @@ ejercicio7:
 	./simusched lotes/loteEj7-2.tsk 1 2 0 SchedMistery 5 10 | ./graphsched.py > img/imgEj7-2.png
 	./simusched lotes/loteEj7-3.tsk 1 2 0 SchedMistery 5 10 | ./graphsched.py > img/imgEj7-3.png
 
-ejercicios: new ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6 ejercicio7
+ejercicio8:
+	./simusched lotes/loteEj8-2.tsk 2 1 3 SchedRR 5 10 | ./graphsched.py > img/imgEj8-1.png
+	./simusched lotes/loteEj8-2.tsk 2 1 3 SchedRR2 5 10 | ./graphsched.py > img/imgEj8-2.png
+	./simusched lotes/loteEj8-1.tsk 2 2 5 SchedRR2 5 10 | ./graphsched.py > img/imgEj8-3.png
+	./simusched lotes/loteEj8-1.tsk 2 2 5 SchedRR 5 10 | ./graphsched.py > img/imgEj8-4.png
+
+ejercicios: new ejercicio1 ejercicio2 ejercicio3 ejercicio5 ejercicio6 ejercicio7 ejercicio8
 
 clean:
 	rm -f $(OBJS) $(MAIN)
