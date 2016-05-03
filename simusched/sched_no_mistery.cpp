@@ -9,7 +9,7 @@ using namespace std;
 SchedNoMistery::SchedNoMistery(vector<int> argn) {
   // MFQ recibe los quantums por parÃ¡metro
   std::queue<int> vacio;
-  for(int i = 0; i < argn.size(); i++){ //Por default viene el parametro 1 de la primera cola
+  for(int i = 0; i < (int)argn.size(); i++){ //Por default viene el parametro 1 de la primera cola
 	  def_quantum.push_back(argn[i]); //Agrego cada quantum de las colas en en def_quantum
 	  vq.push_back(vacio); //Genero una cola vacia para poder accederla más tarde
   }

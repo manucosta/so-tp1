@@ -1,0 +1,5 @@
+*4 TaskCPU 22
+*2 TaskCPU 40
+TaskCPU 30
+@80:
+*2 TaskCPU 10
