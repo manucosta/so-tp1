@@ -30,7 +30,7 @@ Además, la clase cuenta con una función auxiliar, \texttt{int next(int cpu)}, 
 	Si por alg\'un error misterioso el motivo no es ninguno de los descriptos anteriormente, se proceder\'a a enviar un mensaje de error por el standard error.
 \end{itemize}
 
-\subsection{An\'alisis de las m\'etricas}
+\subsection{Comparación entre SchedRR y SchedRR2}
 
 %waiting time empeora con migracion de procesos xq hay un tiempo de cambio de procesador que es tiempo muerto.
 
@@ -44,7 +44,9 @@ Además, la clase cuenta con una función auxiliar, \texttt{int next(int cpu)}, 
 
 
 %estaria bueno ver que pasa cuando las tareas entran en algun momento especifico.
+A continuación analizamos algunas de las ventajas y desventajas de tener migración de procesos entre las CPUs y no tenerlo.
 
+En las figuras \ref{fig:ej8-1} y \ref{fig:ej8-2} contrastamos la eficiencia entre ambas políticas de \emph{scheduling}.
 
 \begin{figure}[H]
   \centering
@@ -62,7 +64,7 @@ Además, la clase cuenta con una función auxiliar, \texttt{int next(int cpu)}, 
   \label{fig:ej8-2}
 \end{figure}
 
-
+En las figuras \ref{fig:ej8-3} y \ref{fig:ej8-4} por otra parte vemos que, aunque el no tener migración de procesos potencialmente desperdicia más los procesadores, si se realizan demasiadas migraciones esto resulta en un tiempo de ejecución global peor.
 
 \begin{figure}[H]
   \centering
