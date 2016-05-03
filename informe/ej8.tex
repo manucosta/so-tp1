@@ -64,6 +64,8 @@ En las figuras \ref{fig:ej8-1} y \ref{fig:ej8-2} contrastamos la eficiencia entr
   \label{fig:ej8-2}
 \end{figure}
 
+En estas figuras observamos que el tener migración reduce el desperdio de cpu, ya que en el tiempo en que el proceso 1 se bloquea en el \texttt{SchedRR2}(que no tiene migración) ese tiempo de procesamiento se pierde. Esto se muestra en el hecho de que el tiempo en que el proceso \emph{idle} corre es mayor \texttt{SchedRR2} que en el \texttt{SchedRR}.
+
 En las figuras \ref{fig:ej8-3} y \ref{fig:ej8-4} por otra parte vemos que, aunque el no tener migración de procesos potencialmente desperdicia más los procesadores, si se realizan demasiadas migraciones esto resulta en un tiempo de ejecución global peor.
 
 \begin{figure}[H]
